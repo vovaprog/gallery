@@ -1,0 +1,59 @@
+<html>
+<style>
+a:active  {color:{{settings['link_color']}}; text-decoration:underline;}
+a:link    {color:{{settings['link_color']}}; text-decoration:underline;}
+a:visited {color:{{settings['link_color']}}; text-decoration:underline;}
+a:hover   {color:{{settings['link_color']}}; text-decoration:underline;}
+</style>
+<body bgcolor="{{settings['bgcolor']}}">
+<table align="center">
+<tr><td align="center">
+<a href="{{gallery_link}}">select albumn</a>
+</td></tr>
+<tr><td height="30px"/></tr>
+{% for image in data.images %}
+<tr><td>
+<a href="{{image.image_link}}">
+<img src="{{image.image_source}}"/>
+</a>
+</td></tr>
+<tr><td height="30px"/></tr>
+{% endfor %}
+
+<tr><td align="center">
+{% for page in data.pages %}
+{% if page.link %}
+<a href="{{page.link}}">{{page.number}}</a>
+{% else %}
+<font color="{{settings['link_color']}}">{{page.number}}</font>
+{% endif %}
+&nbsp;
+{% endfor %}
+</td></tr>
+
+<tr><td align="center">
+<table>
+<tr>
+<td align="left">
+{% if data.previous_link %}
+<a href="{{data.previous_link}}">previous</a>
+{% endif %}
+</td>
+<td align="right">
+{% if data.next_link %}
+<a href="{{data.next_link}}">next</a>
+{% endif %}
+</td>
+</tr>
+</table>
+</td></tr>
+
+
+<tr><td align="center">
+<a href="{{gallery_link}}">select albumn</a>
+</td></tr>
+
+</table>
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+<html>
+<style>
+a:active  {color:{{settings['link_color']}}; text-decoration:underline;font-size:small}
+a:link    {color:{{settings['link_color']}}; text-decoration:underline;font-size:small}
+a:visited {color:{{settings['link_color']}}; text-decoration:underline;font-size:small}
+a:hover   {color:{{settings['link_color']}}; text-decoration:underline;font-size:small}
+</style>
+<body bgcolor="{{settings['bgcolor']}}">
+<table align="center">
+<tr><td height="5px"/></tr>
+{% set column_counter = 0 %}
+{% for albumn in albumns %}
+{% if column_counter==0 %}
+    <tr>
+{% endif %}
+<td align="center">
+<a href="{{albumn.link}}">
+<img src="{{albumn.cover_url}}"/>
+<br/>
+{{albumn.name}}
+</a>
+</td>
+{% set column_counter = column_counter + 1 %} 
+
+{% if column_counter > 2 %}
+    {% set column_counter = 0 %}
+    </tr>
+    <tr><td height="5px"/></tr>
+{% endif %}    
+
+{% endfor %}
+
+</table>
+</body>
+</html>
