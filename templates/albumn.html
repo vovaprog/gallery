@@ -7,39 +7,22 @@ a:hover   {color:{{settings['link_color']}}; text-decoration:underline;}
 </style>
 <body bgcolor="{{settings['bgcolor']}}">
 <table align="center">
-<tr><td align="center">
-<a href="{{gallery_link}}">select albumn</a>
-</td></tr>
-<tr><td height="30px"/></tr>
-{% for image in data.images %}
-<tr><td>
-<a href="{{image.image_link}}">
-<img src="{{image.image_source}}"/>
-</a>
-</td></tr>
-<tr><td height="30px"/></tr>
-{% endfor %}
+
 
 <tr><td align="center">
-{% for page in data.pages %}
-{% if page.link %}
-<a href="{{page.link}}">{{page.number}}</a>
-{% else %}
-<font color="{{settings['link_color']}}">{{page.number}}</font>
-{% endif %}
-&nbsp;
-{% endfor %}
-</td></tr>
-
-<tr><td align="center">
-<table>
+<table width="100%">
 <tr>
-<td align="left">
+<td align="left" width="33%">
 {% if data.previous_link %}
 <a href="{{data.previous_link}}">previous</a>
 {% endif %}
 </td>
-<td align="right">
+
+<td align="center"  width="33%">
+<a href="{{gallery_link}}">select albumn</a>
+</td>
+
+<td align="right" width="33%">
 {% if data.next_link %}
 <a href="{{data.next_link}}">next</a>
 {% endif %}
@@ -49,9 +32,40 @@ a:hover   {color:{{settings['link_color']}}; text-decoration:underline;}
 </td></tr>
 
 
-<tr><td align="center">
-<a href="{{gallery_link}}">select albumn</a>
+
+<tr><td height="30px"/></tr>
+{% for image in data.images %}
+<tr><td>
+<a href="{{image.image_link}}" id="{{image.name}}">
+<img src="{{image.image_source}}" />
+</a>
 </td></tr>
+<tr><td height="30px"/></tr>
+{% endfor %}
+
+
+<tr><td align="center">
+<table width="100%">
+<tr>
+<td align="left" width="33%">
+{% if data.previous_link %}
+<a href="{{data.previous_link}}">previous</a>
+{% endif %}
+</td>
+
+<td align="center"  width="33%">
+<a href="{{gallery_link}}">select albumn</a>
+</td>
+
+<td align="right" width="33%">
+{% if data.next_link %}
+<a href="{{data.next_link}}">next</a>
+{% endif %}
+</td>
+</tr>
+</table>
+</td></tr>
+
 
 </table>
 </body>

@@ -27,10 +27,9 @@ def albumn_page(albumn_name,page_number):
 
 
 @app.route("/image/<albumn_name>/<image_name>")
-def image_page(albumn_name,image_name):
-    return render_template('image.html', 
-        image=image_page_data(albumn_name,image_name),
-        albumn_link=settings['application_url']+"/albumn/"+albumn_name,
+def image_page(albumn_name,image_name):     
+    return render_template('image.html',
+        data=image_page_data(albumn_name,image_name),
         settings=settings)
 
 
