@@ -4,10 +4,9 @@ import re
 
 from settings import settings
 
-photo_folder = os.path.join(settings["data_folder"],"photo")
 
 def gallery_page_data():
-    albumns = os.listdir(photo_folder)
+    albumns = get_albumns()
     
     output = []
     
@@ -119,8 +118,19 @@ def image_page_data(albumn_name,image_name):
 #=========================================================================
 
 
+def get_photo_folder():
+    return os.path.join(settings["data_folder"],"photo")
+
+
+def get_albumns():
+    photo_folder = get_photo_folder()
+    albumns = os.listdir(photo_folder)    
+    albumns = [ albumn for albumn in albumns if os.path.isdir(os.path.join(photo_folder,albumn)) ]    
+    return albumns    
+
+
 def get_albumn_images(albumn_name):
-    albumn_folder=os.path.join(photo_folder,albumn_name)
+    albumn_folder=os.path.join(get_photo_folder(),albumn_name)
     images = os.listdir(albumn_folder)
     images = [ img for img in images if os.path.isfile(os.path.join(albumn_folder,img)) ]    
     return images    
@@ -167,7 +177,7 @@ def create_preview(albumn_name,image_name,width):
     if not os.path.isdir(preview_albumn_folder):
         os.mkdir(preview_albumn_folder)
 
-    photo_name = os.path.join(photo_folder,albumn_name,image_name) 
+    photo_name = os.path.join(get_photo_folder(),albumn_name,image_name) 
     preview_name = os.path.join(preview_albumn_folder,image_name)     
         
     im = Image.open(photo_name)
