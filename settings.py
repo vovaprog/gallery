@@ -6,8 +6,8 @@ settings={
     
     "albumn_page_image_count":10,
     
-    #"data_folder":"./data",
-    "data_folder":"C:\\Share\\foto_test",
+    "data_folder":"./data",
+    #"data_folder":"C:\\Share\\foto_test",
     "data_url":"/data",    
     "application_url":"",
     

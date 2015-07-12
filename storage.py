@@ -8,20 +8,22 @@ from settings import settings
 def gallery_page_data():
     albumns = get_albumns()
     
-    output = []
+    output_albumns = []
     
     for albumn in albumns:
         cover = get_cover_name(albumn)
         if cover is not None:
             check_and_create_preview(albumn,cover,settings["gallery_preview_width"])
                 
-        output.append({
+        output_albumns.append({
             'name':albumn,    
             'link':settings['application_url'] +"/albumn/" +albumn,
             'cover_url':get_preview_url(albumn,cover,settings['gallery_preview_width'])
         })
     
-    return output
+    return {
+        'albumns' : output_albumns        
+    }
     
     
 def albumn_page_data(albumn_name, page_number):    
@@ -72,14 +74,18 @@ def albumn_page_data(albumn_name, page_number):
             'image_link':image_link,
             'name':img
         })
-        
-    output = {
-        'images':output_images, 
-        'previous_link':previous_link,
-        'next_link':next_link
+
+    if settings["application_url"] == "":
+        gallery_link = settings["application_url"] + "/#" + albumn_name
+    else:        
+        gallery_link = settings["application_url"] + "#" + albumn_name
+
+    return {
+        'images' : output_images, 
+        'previous_link' : previous_link,
+        'next_link' : next_link,
+        'gallery_link' : gallery_link
     }        
-        
-    return output
 
 
 def image_page_data(albumn_name,image_name):
@@ -103,8 +109,6 @@ def image_page_data(albumn_name,image_name):
     page_number = image_index / page_size
         
     #=================================================================
-
-    output = {}
 
     return {
         'preview' : get_preview_url(albumn_name,image_name,width),
