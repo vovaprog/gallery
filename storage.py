@@ -130,6 +130,7 @@ def get_albumns():
     photo_folder = get_photo_folder()
     albumns = os.listdir(photo_folder)    
     albumns = [ albumn for albumn in albumns if os.path.isdir(os.path.join(photo_folder,albumn)) ]    
+    albumns.sort()
     return albumns    
 
 
@@ -137,6 +138,7 @@ def get_albumn_images(albumn_name):
     albumn_folder=os.path.join(get_photo_folder(),albumn_name)
     images = os.listdir(albumn_folder)
     images = [ img for img in images if os.path.isfile(os.path.join(albumn_folder,img)) ]    
+    images.sort()
     return images    
 
 
