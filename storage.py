@@ -81,6 +81,7 @@ def albumn_page_data(albumn_name, page_number):
         gallery_link = settings["application_url"] + "#" + albumn_name
 
     return {
+        'albumn_name' : albumn_name,
         'images' : output_images, 
         'previous_link' : previous_link,
         'next_link' : next_link,
@@ -111,6 +112,7 @@ def image_page_data(albumn_name,image_name):
     #=================================================================
 
     return {
+        'albumn_name' : albumn_name,
         'preview' : get_preview_url(albumn_name,image_name,width),
         'original' : get_photo_url(albumn_name,image_name),
         'albumn_link' : get_albumn_url(settings['application_url'],albumn_name,page_number,image_name)
