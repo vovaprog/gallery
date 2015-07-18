@@ -1,7 +1,7 @@
 
 settings={
     "gallery_preview_width":300,    
-    "albumn_preview_width":700,
+    "albumn_preview_width":680,
     "image_preview_width":1000,
     
     "albumn_page_image_count":10,
