@@ -1,10 +1,10 @@
 
 settings={
     "gallery_preview_width":300,    
-    "albumn_preview_width":680,
+    "album_preview_width":680,
     "image_preview_width":1000,
     
-    "albumn_page_image_count":10,
+    "album_page_image_count":10,
     
     "data_folder":"./data",
     #"data_folder":"C:\\Share\\foto_test",

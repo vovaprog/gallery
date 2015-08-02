@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
 
-from storage import gallery_page_data, albumn_page_data, image_page_data
+from storage import gallery_page_data, album_page_data, image_page_data
 from settings import settings
 
 if __name__ == "__main__":
@@ -17,18 +17,18 @@ def gallery_page():
         settings=settings)
 
 
-@app.route("/albumn/<albumn_name>",defaults={'page_number':0})
-@app.route("/albumn/<albumn_name>/<int:page_number>")
-def albumn_page(albumn_name,page_number):
-    return render_template('albumn.html', 
-        data=albumn_page_data(albumn_name,page_number),        
+@app.route("/album/<album_name>",defaults={'page_number':0})
+@app.route("/album/<album_name>/<int:page_number>")
+def album_page(album_name,page_number):
+    return render_template('album.html', 
+        data=album_page_data(album_name,page_number),        
         settings=settings)
 
 
-@app.route("/image/<albumn_name>/<image_name>")
-def image_page(albumn_name,image_name):     
+@app.route("/image/<album_name>/<image_name>")
+def image_page(album_name,image_name):     
     return render_template('image.html',
-        data=image_page_data(albumn_name,image_name),
+        data=image_page_data(album_name,image_name),
         settings=settings)
 
 

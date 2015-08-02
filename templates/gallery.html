@@ -12,15 +12,15 @@ a:hover   {color:{{settings['link_color']}}; text-decoration:none;font-size:smal
 <table align="center">
 <tr><td height="5px"/></tr>
 {% set column_counter = 0 %}
-{% for albumn in data.albumns %}
+{% for album in data.albums %}
 {% if column_counter==0 %}
     <tr>
 {% endif %}
 <td align="center">
-<a href="{{albumn.link}}" name="{{albumn.name}}">
-<img src="{{albumn.cover_url}}"/>
+<a href="{{album.link}}" name="{{album.name}}">
+<img src="{{album.cover_url}}"/>
 <br/>
-{{albumn.name}}
+{{album.name}}
 </a>
 </td>
 {% set column_counter = column_counter + 1 %} 
