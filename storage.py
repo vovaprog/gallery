@@ -1,6 +1,7 @@
 import os
 import Image
 import re
+import urllib
 
 from settings import settings
 
@@ -108,14 +109,28 @@ def image_page_data(album_name,image_name):
         image_index = 0
 
     page_number = image_index / page_size
+
+    #=================================================================
+
+    if image_index > 0:
+        previous_image_link = get_image_url(settings["application_url"],album_name,images[image_index-1])
+    else:
+        previous_image_link = None
         
+    if image_index < len(images) - 1:
+        next_image_link = get_image_url(settings["application_url"],album_name,images[image_index+1])
+    else:
+        next_image_link = None
+
     #=================================================================
 
     return {
         'album_name' : album_name,
         'preview' : get_preview_url(album_name,image_name,width),
         'original' : get_photo_url(album_name,image_name),
-        'album_link' : get_album_url(settings['application_url'],album_name,page_number,image_name)
+        'album_link' : get_album_url(settings['application_url'],album_name,page_number,image_name),
+        'previous_image_link' : previous_image_link,
+        'next_image_link' : next_image_link
     }
         
 
@@ -146,22 +161,29 @@ def get_album_images(album_name):
 
 def check_name(name):    
     if not re.match("^[A-Za-z0-9\\s.\\-_]+$",name) or name.find("..")>=0:                
+        print name
         raise ValueError("invalid name")
 
 
 def get_preview_url(album,image,width):
-    return str.format("{0}/preview_{1}/{2}/{3}",settings['data_url'],width,album,image)    
+    return str.format("{0}/preview_{1}/{2}/{3}",settings['data_url'],width,urllib.quote(album),urllib.quote(image))
 
 
 def get_photo_url(album,image):
-    return str.format("{0}/photo/{1}/{2}",settings['data_url'],album,image)
+    return str.format("{0}/photo/{1}/{2}",settings['data_url'],urllib.quote(album),urllib.quote(image))
 
 
 def get_album_url(application_url,album_name,page_number,image_name=None):
+    album_name = str.format("{0}/album/{1}/{2}",application_url,urllib.quote(album_name),page_number)
+
     if image_name is not None:
-        return str.format("{0}/album/{1}/{2}#{3}",application_url,album_name,page_number,image_name)        
-    else:    
-        return str.format("{0}/album/{1}/{2}",application_url,album_name,page_number)        
+        album_name += "#" + urllib.quote(image_name)
+
+    return album_name
+
+
+def get_image_url(application_url,album_name,image_name):
+    return str.format("{0}/image/{1}/{2}",application_url,urllib.quote(album_name),urllib.quote(image_name))
 
 
 def check_and_create_preview(album_name,image_name,width):

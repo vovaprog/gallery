@@ -2,12 +2,11 @@
 settings={
     "gallery_preview_width":300,    
     "album_preview_width":680,
-    "image_preview_width":1000,
+    "image_preview_width":900,
     
     "album_page_image_count":10,
     
     "data_folder":"./data",
-    #"data_folder":"C:\\Share\\foto_test",
     "data_url":"/data",    
     "application_url":"",
     

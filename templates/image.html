@@ -17,9 +17,34 @@ a:hover   {color:{{settings['link_color']}}; text-decoration:underline; font-fam
 </a>
 </td></tr>
 <tr><td height="30px"></td></tr>
-<tr><td align="center">
+
+<!--<tr><td align="center">
 <a href="{{data.album_link}}">back to album</a>
+</td></tr>-->
+
+<tr><td align="center">
+<table width="100%">
+<tr>
+<td align="left" width="33%">
+{% if data.previous_image_link %}
+<a href="{{data.previous_image_link}}">previous</a>
+{% endif %}
+</td>
+
+<td align="center"  width="33%">
+<a href="{{data.album_link}}">back to album</a>
+</td>
+
+<td align="right" width="33%">
+{% if data.next_image_link %}
+<a href="{{data.next_image_link}}">next</a>
+{% endif %}
+</td>
+</tr>
+</table>
 </td></tr>
+
+
 </table>
 </body>
 </html>
