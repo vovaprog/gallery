@@ -4,7 +4,7 @@ import re
 import urllib
 
 from settings import settings
-
+from flask import url_for
 
 def gallery_page_data():
     albums = get_albums()
@@ -18,7 +18,7 @@ def gallery_page_data():
                 
         output_albums.append({
             'name':album,    
-            'link':settings['application_url'] +"/album/" +album,
+            'link': get_album_url(settings['application_url'],album),
             'cover_url':get_preview_url(album,cover,settings['gallery_preview_width'])
         })
     
@@ -27,10 +27,10 @@ def gallery_page_data():
     }
     
     
-def album_page_data(album_name, page_number):    
+def album_page_data(album_name, view, page_number):    
     check_name(album_name)
     
-    page_size = settings['album_page_image_count']
+    page_size = settings['album_'+view+'_page_image_count']
     
     images = get_album_images(album_name)
     
@@ -49,12 +49,12 @@ def album_page_data(album_name, page_number):
         end_index = len(images)
 
     if start_index>0:
-        previous_link = get_album_url(settings['application_url'],album_name,page_number-1)
+        previous_link = get_album_url(settings['application_url'],album_name,page_number-1,None,view)
     else:
         previous_link=None
         
     if end_index< len(images):
-        next_link = get_album_url(settings['application_url'],album_name,page_number+1)
+        next_link = get_album_url(settings['application_url'],album_name,page_number+1,None,view)
     else:
         next_link=None
 
@@ -66,7 +66,7 @@ def album_page_data(album_name, page_number):
     
     output_images = []
     
-    width=settings["album_preview_width"]
+    width=settings["album_"+view+"_preview_width"]
     for img in images:
         check_and_create_preview(album_name,img,width)
         image_link=str.format("{0}/image/{1}/{2}",settings["application_url"],album_name,img)
@@ -86,7 +86,11 @@ def album_page_data(album_name, page_number):
         'images' : output_images, 
         'previous_link' : previous_link,
         'next_link' : next_link,
-        'gallery_link' : gallery_link
+        'gallery_link' : gallery_link,
+        'columns' : int(view),
+        'view_1cols_link' : get_album_url(settings['application_url'],album_name,page_number,None,"1"),
+        'view_2cols_link' : get_album_url(settings['application_url'],album_name,page_number,None,"2"),
+        'view_3cols_link' : get_album_url(settings['application_url'],album_name,page_number,None,"3"),
     }        
 
 
@@ -160,8 +164,7 @@ def get_album_images(album_name):
 
 
 def check_name(name):    
-    if not re.match("^[A-Za-z0-9\\s.\\-_]+$",name) or name.find("..")>=0:                
-        print name
+    if not re.match("^[A-Za-z0-9\\s.\\-_]+$",name) or name.find("..")>=0:                        
         raise ValueError("invalid name")
 
 
@@ -173,11 +176,13 @@ def get_photo_url(album,image):
     return str.format("{0}/photo/{1}/{2}",settings['data_url'],urllib.quote(album),urllib.quote(image))
 
 
-def get_album_url(application_url,album_name,page_number,image_name=None):
+def get_album_url(application_url,album_name,page_number=0,image_name=None,view=settings['album_default_view']):
     album_name = str.format("{0}/album/{1}/{2}",application_url,urllib.quote(album_name),page_number)
 
     if image_name is not None:
         album_name += "#" + urllib.quote(image_name)
+
+    album_name = album_name + "?"+urllib.urlencode({"album-view":view})
 
     return album_name
 

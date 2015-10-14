@@ -1,0 +1,114 @@
+<html>
+<head>
+<title>{{data.album_name}}</title>
+<style>
+a:active  {color:{{settings['link_color']}}; text-decoration:underline; font-family: Arial;}
+a:link    {color:{{settings['link_color']}}; text-decoration:underline; font-family: Arial;}
+a:visited {color:{{settings['link_color']}}; text-decoration:underline; font-family: Arial;}
+a:hover   {color:{{settings['link_color']}}; text-decoration:underline; font-family: Arial;}
+</style>
+</head>
+<body bgcolor="{{settings['bgcolor']}}">
+<table align="center">
+
+
+<tr><td align="center" colspan="3">
+<table width="100%">
+<tr>
+<td align="left" width="33%">
+{% if data.previous_link %}
+<a href="{{data.previous_link}}">previous</a>
+{% endif %}
+</td>
+
+<td align="center"  width="33%">
+<a href="{{data.gallery_link}}">back to gallery</a>
+</td>
+
+<td align="right" width="33%">
+{% if data.next_link %}
+<a href="{{data.next_link}}">next</a>
+{% endif %}
+</td>
+</tr>
+<tr>
+<td align="left" width="33%">
+
+
+<span style="font-size:small;color:{{settings['link_color']}};font-family: Arial;">
+columns:
+{% if data.columns != 1 %}
+<a href="{{data.view_1cols_link}}">1</a>
+{% else %}
+1
+{% endif %}
+{% if data.columns != 2 %}
+<a href="{{data.view_2cols_link}}">2</a>
+{% else %}
+2
+{% endif %}
+{% if data.columns != 3 %}
+<a href="{{data.view_3cols_link}}">3</a>
+{% else %}
+3
+{% endif %}
+</span>
+
+
+</td>
+</tr>
+</table>
+</td></tr>
+
+
+
+{% set column_counter = 0 %}
+{% for image in data.images %}
+{% if column_counter==0 %}
+    <tr>
+{% endif %}
+<td align="center">
+<a href="{{image.image_link}}" id="{{image.name}}">
+<img src="{{image.image_source}}" />
+</a>
+</td>
+{% set column_counter = column_counter + 1 %} 
+
+{% if column_counter >= data.columns %}
+    {% set column_counter = 0 %}
+    </tr>
+    <tr><td height="8px"/></tr>
+{% endif %}    
+
+{% endfor %}
+
+
+
+
+
+<tr><td align="center" colspan="3">
+<table width="100%">
+<tr>
+<td align="left" width="33%">
+{% if data.previous_link %}
+<a href="{{data.previous_link}}">previous</a>
+{% endif %}
+</td>
+
+<td align="center"  width="33%">
+<a href="{{data.gallery_link}}">back to gallery</a>
+</td>
+
+<td align="right" width="33%">
+{% if data.next_link %}
+<a href="{{data.next_link}}">next</a>
+{% endif %}
+</td>
+</tr>
+</table>
+</td></tr>
+
+</table>
+</body>
+</html>
+

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template
+from flask import request
 import urllib
 
 from storage import gallery_page_data, album_page_data, image_page_data
@@ -21,9 +22,17 @@ def gallery_page():
 @app.route("/album/<album_name>/<int:page_number>")
 def album_page(album_name,page_number):
     album_name = urllib.unquote(album_name)
+    view = request.args.get('album-view')
 
-    return render_template('album.html', 
-        data=album_page_data(album_name,page_number),        
+    template_name=None
+    if view == "2" or view == "3":
+        template_name='album_column_view.html'
+    else:
+        view = "1"
+        template_name='album.html'
+
+    return render_template(template_name, 
+        data=album_page_data(album_name,view,page_number),        
         settings=settings)
 
 
