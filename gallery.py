@@ -22,17 +22,9 @@ def gallery_page():
 @app.route("/album/<album_name>/<int:page_number>")
 def album_page(album_name,page_number):
     album_name = urllib.unquote(album_name)
-    view = request.args.get('album-view')
 
-    template_name=None
-    if view == "2" or view == "3":
-        template_name='album_column_view.html'
-    else:
-        view = "1"
-        template_name='album.html'
-
-    return render_template(template_name, 
-        data=album_page_data(album_name,view,page_number),        
+    return render_template('album_column_view.html', 
+        data=album_page_data(album_name,page_number,request.args.copy()),        
         settings=settings)
 
 

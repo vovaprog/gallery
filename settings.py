@@ -10,7 +10,7 @@ settings={
     "album_2_page_image_count":10,
     "album_3_page_image_count":18,
     
-    "album_default_view":3,
+    "album-view-default":"3",
     
     "data_folder":"./data",
     "data_url":"/data",    
