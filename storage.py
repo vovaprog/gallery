@@ -180,9 +180,9 @@ def check_name(name):
 #=========================================================================
 
 def get_gallery_url(parameters,album_name):
-    gallery_url = None
+    gallery_url = settings["application_url"]
     if settings["application_url"] == "":
-        gallery_url="/"
+        gallery_url = gallery_url + "/"
     gallery_url = append_url_parameters(gallery_url,parameters)
     if album_name:
         gallery_url = gallery_url + "#" + urllib.quote(album_name)
