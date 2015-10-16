@@ -6,7 +6,7 @@ import urllib
 from settings import settings
 from flask import url_for
 
-def gallery_page_data():
+def gallery_page_data(parameters):
     albums = get_albums()
     
     output_albums = []
@@ -17,8 +17,8 @@ def gallery_page_data():
             check_and_create_preview(album,cover,settings["gallery_preview_width"])
                 
         output_albums.append({
-            'name':album,    
-            'link': get_album_url(settings['application_url'],album),
+            'name':album,
+            'link': get_album_url(settings['application_url'],album,parameters=parameters),
             'cover_url':get_preview_url(album,cover,settings['gallery_preview_width'])
         })
     
@@ -30,8 +30,7 @@ def gallery_page_data():
 def album_page_data(album_name, page_number, parameters):    
     check_name(album_name)
     
-    view = get_parameter(parameters,'album-view')
-    parameters['album-view']=view
+    view = get_parameter(parameters,'album-view')    
     
     page_size = settings['album_'+view+'_page_image_count']
     
@@ -52,12 +51,12 @@ def album_page_data(album_name, page_number, parameters):
         end_index = len(images)
 
     if start_index>0:
-        previous_link = get_album_url(settings['application_url'],album_name,page_number-1,None,parameters)
+        previous_link = get_album_url(settings['application_url'],album_name,page_number-1,parameters=parameters)
     else:
         previous_link=None
         
     if end_index< len(images):
-        next_link = get_album_url(settings['application_url'],album_name,page_number+1,None,parameters)
+        next_link = get_album_url(settings['application_url'],album_name,page_number+1,parameters=parameters)
     else:
         next_link=None
 
@@ -72,24 +71,23 @@ def album_page_data(album_name, page_number, parameters):
     width=settings["album_"+view+"_preview_width"]
     for img in images:
         check_and_create_preview(album_name,img,width)
-        image_link=str.format("{0}/image/{1}/{2}",settings["application_url"],album_name,img)
+        
+        image_link= get_image_url(album_name=album_name,image_name=img,parameters=parameters)
+        
         output_images.append({
             'image_source':get_preview_url(album_name,img,width),
             'image_link':image_link,
             'name':img
         })
 
-    if settings["application_url"] == "":
-        gallery_link = settings["application_url"] + "/#" + album_name
-    else:        
-        gallery_link = settings["application_url"] + "#" + album_name
+    gallery_link = get_gallery_url(parameters = parameters,album_name = album_name)
 
     parameters['album-view']="1"
-    view_1cols_link=get_album_url(settings['application_url'],album_name,page_number,None,parameters)
+    view_1cols_link=get_album_url(settings['application_url'],album_name,page_number,parameters=parameters)
     parameters['album-view']="2"
-    view_2cols_link=get_album_url(settings['application_url'],album_name,page_number,None,parameters)
+    view_2cols_link=get_album_url(settings['application_url'],album_name,page_number,parameters=parameters)
     parameters['album-view']="3"
-    view_3cols_link=get_album_url(settings['application_url'],album_name,page_number,None,parameters)
+    view_3cols_link=get_album_url(settings['application_url'],album_name,page_number,parameters=parameters)
 
     return {
         'album_name' : album_name,
@@ -104,7 +102,7 @@ def album_page_data(album_name, page_number, parameters):
     }        
 
 
-def image_page_data(album_name,image_name):
+def image_page_data(album_name,image_name,parameters):
     check_name(album_name)
     check_name(image_name)
 
@@ -113,7 +111,8 @@ def image_page_data(album_name,image_name):
 
     #=================================================================
 
-    page_size = settings['album_page_image_count']
+    album_view = get_parameter(parameters,"album-view")    
+    page_size = settings['album_'+album_view+'_page_image_count']
 
     images = get_album_images(album_name)
     
@@ -127,12 +126,12 @@ def image_page_data(album_name,image_name):
     #=================================================================
 
     if image_index > 0:
-        previous_image_link = get_image_url(settings["application_url"],album_name,images[image_index-1])
+        previous_image_link = get_image_url(album_name,images[image_index-1],parameters=parameters)
     else:
         previous_image_link = None
         
     if image_index < len(images) - 1:
-        next_image_link = get_image_url(settings["application_url"],album_name,images[image_index+1])
+        next_image_link = get_image_url(album_name,images[image_index+1],parameters=parameters)
     else:
         next_image_link = None
 
@@ -142,7 +141,7 @@ def image_page_data(album_name,image_name):
         'album_name' : album_name,
         'preview' : get_preview_url(album_name,image_name,width),
         'original' : get_photo_url(album_name,image_name),
-        'album_link' : get_album_url(settings['application_url'],album_name,page_number,image_name),
+        'album_link' : get_album_url(settings['application_url'],album_name,page_number,image_name,parameters=parameters),
         'previous_image_link' : previous_image_link,
         'next_image_link' : next_image_link
     }
@@ -178,6 +177,20 @@ def check_name(name):
         raise ValueError("invalid name")
 
 
+#=========================================================================
+#=========================================================================
+#=========================================================================
+
+def get_gallery_url(parameters,album_name):
+    gallery_url = None
+    if settings["application_url"] == "":
+        gallery_url="/"
+    gallery_url = append_url_parameters(gallery_url,parameters)
+    if album_name:
+        gallery_url = gallery_url + "#" + urllib.quote(album_name)
+    return gallery_url
+
+
 def get_preview_url(album,image,width):
     return str.format("{0}/preview_{1}/{2}/{3}",settings['data_url'],width,urllib.quote(album),urllib.quote(image))
 
@@ -185,26 +198,35 @@ def get_preview_url(album,image,width):
 def get_photo_url(album,image):
     return str.format("{0}/photo/{1}/{2}",settings['data_url'],urllib.quote(album),urllib.quote(image))
 
+
 def append_url_parameters(url,parameters):
     if not parameters is None:
-        return url+"?"+urllib.urlencode(parameters)
-    else:
-        return url
+        param_string = urllib.urlencode(parameters)
+        if param_string:
+            url = url+"?"+urllib.urlencode(parameters)         
+    return url
     
 
-def get_album_url(application_url,album_name,page_number=0,image_name=None,parameters=None): #view=settings['album-view-default']):
+def get_album_url(application_url,album_name,page_number=0,image_name=None,parameters=None):
     album_name = str.format("{0}/album/{1}/{2}",application_url,urllib.quote(album_name),page_number)
 
-    if image_name is not None:
-        album_name += "#" + urllib.quote(image_name)
-
     album_name=append_url_parameters(album_name,parameters)
+
+    if image_name:
+        album_name += "#" + urllib.quote(image_name) 
 
     return album_name
 
 
-def get_image_url(application_url,album_name,image_name):
-    return str.format("{0}/image/{1}/{2}",application_url,urllib.quote(album_name),urllib.quote(image_name))
+def get_image_url(album_name,image_name,parameters):
+    url = str.format("{0}/image/{1}/{2}",settings["application_url"],urllib.quote(album_name),urllib.quote(image_name))
+    url = append_url_parameters(url,parameters)
+    return url
+
+
+#=========================================================================
+#=========================================================================
+#=========================================================================
 
 
 def check_and_create_preview(album_name,image_name,width):
@@ -232,6 +254,12 @@ def create_preview(album_name,image_name,width):
     preview_name = os.path.join(preview_album_folder,image_name)     
         
     im = Image.open(photo_name)
+    img_width = im.size[0]    
+    img_height = im.size[1]
+    
+    if img_height > img_width:
+        width = width * settings["image_height_ratio"] / settings["image_width_ratio"]
+    
     im.thumbnail((width,width), Image.ANTIALIAS)
     im.save(preview_name, "JPEG")
     
@@ -249,11 +277,15 @@ def get_cover_name(album_name):
         cover=None           
     return cover
     
+    
 def get_parameter(parameters,parameter_name):
     value = parameters.get(parameter_name)
     if not value is None:
         return value
     else:
-        return settings.get(parameter_name+"-default")
+        value = settings.get(parameter_name+"-default")
+        if not value is None:
+            parameters[parameter_name]=value
+        return value
     
     

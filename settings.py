@@ -17,6 +17,9 @@ settings={
     "application_url":"",
     
     "bgcolor":"#333333",
-    "link_color":"#B0B0A0"
+    "link_color":"#B0B0A0",
+    
+    "image_width_ratio":4,
+    "image_height_ratio":3    
 }
 
