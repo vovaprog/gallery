@@ -9,7 +9,7 @@ a:hover   {color:{{settings['link_color']}}; text-decoration:underline; font-fam
 </style>
 </head>
 <body bgcolor="{{settings['bgcolor']}}">
-<table align="center" cellpadding="2px">
+<table align="center" cellspacing="3px" cellpadding="0px">
 
 {#====================================================================================#}
 
@@ -70,9 +70,7 @@ columns:
     <tr>
 {% endif %}
 <td align="center">
-<a href="{{image.image_link}}" id="{{image.name}}">
-<img src="{{image.image_source}}" />
-</a>
+<a href="{{image.image_link}}" id="{{image.name}}"><img src="{{image.image_source}}" /></a>
 </td>
 {% set column_counter = column_counter + 1 %} 
 
