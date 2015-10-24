@@ -190,6 +190,7 @@ def get_gallery_url(parameters,album_name):
 
 
 def get_preview_url(album,image,width):
+    image = replace_extension(image,".png")
     return str.format("{0}/preview_{1}/{2}/{3}",settings['data_url'],width,urllib.quote(album),urllib.quote(image))
 
 
@@ -227,15 +228,24 @@ def get_image_url(album_name,image_name,parameters):
 #=========================================================================
 
 
+def replace_extension(file_name,new_extension):
+    (root, ext) = os.path.splitext(file_name)
+    return root + new_extension
+    
+
+def get_preview_file_name(album_name,image_name,width):
+    preview_folder = os.path.join(settings["data_folder"],"preview_"+str(width))
+    image_name=replace_extension(image_name,".png")
+    return os.path.join(preview_folder,album_name,image_name)     
+    
+
 def check_and_create_preview(album_name,image_name,width):
     if not check_preview_exists(album_name,image_name,width):
         create_preview(album_name,image_name,width)    
     
     
 def check_preview_exists(album_name,image_name,width):
-    preview_folder = os.path.join(settings["data_folder"],"preview_"+str(width))
-    file_name = os.path.join(preview_folder,album_name,image_name)    
-    return os.path.isfile(file_name) 
+    return os.path.isfile(get_preview_file_name(album_name,image_name,width)) 
     
     
 def create_preview(album_name,image_name,width):
@@ -248,8 +258,8 @@ def create_preview(album_name,image_name,width):
     if not os.path.isdir(preview_album_folder):
         os.mkdir(preview_album_folder)
 
-    photo_name = os.path.join(get_photo_folder(),album_name,image_name) 
-    preview_name = os.path.join(preview_album_folder,image_name)     
+    photo_name = os.path.join(get_photo_folder(),album_name,image_name)     
+    preview_name=get_preview_file_name(album_name,image_name,width)
         
     im = Image.open(photo_name)
     img_width = im.size[0]    
@@ -259,7 +269,7 @@ def create_preview(album_name,image_name,width):
         width = width * settings["image_height_ratio"] / settings["image_width_ratio"]
     
     im.thumbnail((width,width), Image.ANTIALIAS)
-    im.save(preview_name, "JPEG")
+    im.save(preview_name, "PNG")    
     
     
 def get_cover_name(album_name):        
