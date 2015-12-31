@@ -21,9 +21,10 @@ def gallery_page():
 
 
 @app.route("/album/<album_name>",defaults={'page_number':0})
-@app.route("/album/<album_name>/<int:page_number>")
+@app.route("/album/<album_name>/<page_number>")
 def album_page(album_name,page_number):
     album_name = urllib.unquote(album_name)
+    page_number = int(page_number)
 
     return render_template('album.html', 
         data=album_page_data(album_name,page_number,request.args.copy()),        
