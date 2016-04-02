@@ -38,18 +38,21 @@ a:hover   {color:{{settings['link_color']}}; text-decoration:underline; font-fam
 <tr><td height="8px"/></tr>
 <tr>
 <td align="left" colspan="3">
-<span style="font-size:small;color:{{settings['link_color']}};font-family: Arial;">
+<span style="color:{{settings['link_color']}};font-family: Arial;">
 columns:
+&nbsp;
 {% if data.columns != 1 %}
 <a href="{{data.album_view_1cols_link}}">1</a>
 {% else %}
 1
 {% endif %}
+&nbsp;
 {% if data.columns != 2 %}
 <a href="{{data.album_view_2cols_link}}">2</a>
 {% else %}
 2
 {% endif %}
+&nbsp;
 {% if data.columns != 3 %}
 <a href="{{data.album_view_3cols_link}}">3</a>
 {% else %}

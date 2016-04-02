@@ -154,11 +154,53 @@ def get_photo_folder():
     return os.path.join(settings["data_folder"],"photo")
 
 
+def sort_albums(albums):
+    sort_params = settings.get("album_sort")
+    if sort_params is None:    
+        albums.sort()
+        return albums
+    else:        
+        concrete_albums = []
+        
+        for sort_param in sort_params:
+            if not sort_param.startswith("number ") and not sort_param.startswith("word "):
+                if sort_param in albums:
+                    concrete_albums.append(sort_param)
+                    albums.remove(sort_param)
+        
+        output = []
+        
+        for sort_param in sort_params:
+            if sort_param.startswith("number "):
+                search_rex = "^[0-9]+"
+            elif sort_param.startswith("word "):
+                search_rex = "^[^0-9]+"
+                
+            if sort_param.startswith("number ") or sort_param.startswith("word "):                 
+                sort_param_words = sort_param.split();
+                
+                sort_order = sort_param_words[1] if len(sort_param_words)>1 else "asc" 
+                
+                selected_albums = [album for album in albums if re.match(search_rex,album)]
+                
+                selected_albums.sort(reverse = sort_order=="desc")                                
+                output.extend(selected_albums)
+                albums = [album for album in albums if not album in selected_albums]
+            else: 
+                if sort_param in concrete_albums:
+                    output.append(sort_param)
+                    concrete_albums.remove(sort_param)
+                    
+        output.extend(albums)
+                
+        return output                
+        
+
 def get_albums():
     photo_folder = get_photo_folder()
     albums = os.listdir(photo_folder)    
-    albums = [ album for album in albums if os.path.isdir(os.path.join(photo_folder,album)) ]    
-    albums.sort()
+    albums = [ album for album in albums if os.path.isdir(os.path.join(photo_folder,album)) ]
+    albums = sort_albums(albums)   
     return albums    
 
 

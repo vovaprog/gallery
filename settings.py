@@ -20,6 +20,8 @@ settings={
     "link_color":"#B0B0A0",
     
     "image_width_ratio":4,
-    "image_height_ratio":3    
+    "image_height_ratio":3,
+    
+    "album_sort": ["flowers", "fractals", "number desc", "word asc"]
 }
 
