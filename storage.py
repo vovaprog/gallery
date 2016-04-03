@@ -170,17 +170,17 @@ def sort_albums(albums):
         
         output = []
         
-        for sort_param in sort_params:
-            if sort_param.startswith("number "):
-                search_rex = "^[0-9]+"
-            elif sort_param.startswith("word "):
-                search_rex = "^[^0-9]+"
-                
+        for sort_param in sort_params:                
             if sort_param.startswith("number ") or sort_param.startswith("word "):                 
                 sort_param_words = sort_param.split();
                 
                 sort_order = sort_param_words[1] if len(sort_param_words)>1 else "asc" 
                 
+                if sort_param.startswith("number "):
+                    search_rex = "^[0-9]+"
+                elif sort_param.startswith("word "):
+                    search_rex = "^[^0-9]+"
+
                 selected_albums = [album for album in albums if re.match(search_rex,album)]
                 
                 selected_albums.sort(reverse = sort_order=="desc")                                
@@ -287,7 +287,13 @@ def check_and_create_preview(album_name,image_name,width):
     
     
 def check_preview_exists(album_name,image_name,width):
-    return os.path.isfile(get_preview_file_name(album_name,image_name,width)) 
+    preview_file_name = get_preview_file_name(album_name,image_name,width)
+    if os.path.isfile(preview_file_name):        
+        image_create_time = os.path.getctime(os.path.join(get_photo_folder(),album_name,image_name))        
+        preview_create_time = os.path.getctime(preview_file_name)
+        if image_create_time <= preview_create_time:
+            return True
+    return False
     
     
 def create_preview(album_name,image_name,width):
