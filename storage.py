@@ -289,9 +289,9 @@ def check_and_create_preview(album_name,image_name,width):
 def check_preview_exists(album_name,image_name,width):
     preview_file_name = get_preview_file_name(album_name,image_name,width)
     if os.path.isfile(preview_file_name):        
-        image_create_time = os.path.getctime(os.path.join(get_photo_folder(),album_name,image_name))        
-        preview_create_time = os.path.getctime(preview_file_name)
-        if image_create_time <= preview_create_time:
+        image_modify_time = os.path.getmtime(os.path.join(get_photo_folder(),album_name,image_name))        
+        preview_modify_time = os.path.getmtime(preview_file_name)
+        if image_modify_time <= preview_modify_time:
             return True
     return False
     
