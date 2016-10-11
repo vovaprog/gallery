@@ -15,6 +15,7 @@ settings={
     "data_folder":"./data",
     "data_url":"/data",    
     "application_url":"",
+    "application_route_url":"",   # example: "/gallery", empty: ""
     
     "bgcolor":"#333333",
     "link_color":"#B0B0A0",

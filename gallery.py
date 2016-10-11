@@ -11,17 +11,22 @@ if __name__ == "__main__":
     app = Flask(__name__, static_folder='data', static_url_path='/data')
 else:
     app = Flask(__name__)
-    
 
-@app.route("/")
+
+gallery_route = settings["application_route_url"]
+if gallery_route == "":
+    gallery_route = "/"
+
+
+@app.route(gallery_route)
 def gallery_page(): 
     return render_template('gallery.html', 
         data=gallery_page_data(request.args.copy()),
         settings=settings)
 
 
-@app.route("/album/<album_name>",defaults={'page_number':0})
-@app.route("/album/<album_name>/<page_number>")
+@app.route(settings["application_route_url"] + "/album/<album_name>",defaults={'page_number':0})
+@app.route(settings["application_route_url"] + "/album/<album_name>/<page_number>")
 def album_page(album_name,page_number):
     album_name = urllib.unquote(album_name)
     page_number = int(page_number)
@@ -31,7 +36,7 @@ def album_page(album_name,page_number):
         settings=settings)
 
 
-@app.route("/image/<album_name>/<image_name>")
+@app.route(settings["application_route_url"] + "/image/<album_name>/<image_name>")
 def image_page(album_name,image_name):
     album_name = urllib.unquote(album_name)
     image_name = urllib.unquote(image_name)
