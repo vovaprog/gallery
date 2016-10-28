@@ -3,6 +3,7 @@ import Image
 import re
 import urllib
 
+from file_utils import open_file_write_exclusive
 from settings import settings
 
 
@@ -309,15 +310,23 @@ def create_preview(album_name, image_name, width):
     photo_name = os.path.join(get_photo_folder(), album_name, image_name)
     preview_name = get_preview_file_name(album_name, image_name, width)
 
-    im = Image.open(photo_name)
-    img_width = im.size[0]
-    img_height = im.size[1]
+    preview_fl = open_file_write_exclusive(preview_name)
+    if preview_fl is None:
+        return
 
-    if img_height > img_width:
-        width = width * settings["image_height_ratio"] / settings["image_width_ratio"]
+    try:
+        im = Image.open(photo_name)
+        img_width = im.size[0]
+        img_height = im.size[1]
+    
+        if img_height > img_width:
+            width = width * settings["image_height_ratio"] / settings["image_width_ratio"]
+    
+        im.thumbnail((width, width), Image.ANTIALIAS)
+        im.save(preview_fl, "PNG")
 
-    im.thumbnail((width, width), Image.ANTIALIAS)
-    im.save(preview_name, "PNG")
+    finally:
+        preview_fl.close()
 
 
 def get_cover_name(album_name):
