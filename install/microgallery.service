@@ -1,0 +1,18 @@
+# systemd unit file to run microgallery with uwsgi
+# edit this file and put to /etc/systemd/system folder
+
+[Unit]
+Description=microgallery
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/uwsgi --http-socket 127.0.0.1:7071 --wsgi-file /folder_name/microgallery/gallery.wsgi
+WorkingDirectory=/folder_name/microgallery
+Restart=on-failure
+User=username
+Group=groupname
+
+[Install]
+WantedBy=multi-user.target
+
